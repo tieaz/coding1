@@ -1,34 +1,50 @@
+from typing import *
 
-### Water height O(n^2) solution
+### Sample terrain
 
 terrain = [1, 3, 1, 1, 2, 0, 0, 1, 2, 2, 4, 1]
 
-water_height = terrain[:]
-for i in range(len(terrain)):
-  water_height[i] = min(max(terrain[:i + 1]), max(terrain[i:])) - terrain[i]
 
-print('Solution 1:', sum(water_height))
+### Prototype
+
+def reservoir_volume(terrain: List[int]) -> int:
+  pass
+
+
+### Water height O(n^2) solution
+
+def reservoir_volume_brute(terrain: List[int]) -> int:
+  water_height = terrain[:]
+  for i in range(len(terrain)):
+
+    water_height[i] = min(max(terrain[:i + 1]), max(terrain[i:])) - terrain[i]
+
+  return sum(water_height)
+
+print('Brute force:', reservoir_volume_brute(terrain))
+# Brute force: 15
 
 
 ### Water height O(n) cumsum solution
 
-cumleft = [terrain[0]]
-for i in range(1, len(terrain)):
-  cumleft.append(max(terrain[i], cumleft[-1]))
+def reservoir_volume_cumsum(terrain: List[int]) -> int:
+  cumleft = [terrain[0]]
+  for i in range(1, len(terrain)):
+    cumleft.append(max(terrain[i], cumleft[-1]))
 
-cumright = [terrain[-1]]
-for i in range(len(terrain) - 2, -1, -1):
-  cumright.append(max(terrain[i], cumright[-1]))
+  cumright = [terrain[-1]]
+  for i in range(len(terrain) - 2, -1, -1):
+    cumright.append(max(terrain[i], cumright[-1]))
 
-cumright = cumright[::-1]
+  cumright = cumright[::-1]
 
-water_height = [
-  min(cumleft[i], cumright[i]) - terrain[i]
-  for i in range(len(terrain))
-]
-print('\ncumleft:', cumleft)
-print('cumright:', cumright)
-print('Solution 2:', sum(water_height))
+  return sum([
+    min(cumleft[i], cumright[i]) - terrain[i]
+    for i in range(len(terrain))
+  ])
+
+print('Cumsum solution:', reservoir_volume_cumsum(terrain))
+# Cumsum solution: 15
 
 
 ### Cumulative product
