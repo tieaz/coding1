@@ -1,40 +1,39 @@
+# Chapter F ⇒ Flood Fill
+
+from typing import *
+
+
+matrix = [
+  [0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,1,0],
+  [0,0,1,1,0,0,0,0,0,0],
+  [0,0,1,0,1,0,0,0,0,0],
+  [0,1,1,1,0,1,1,0,0,0],
+  [0,1,0,1,0,1,1,1,0,0],
+  [0,0,0,0,0,0,1,1,0,0],
+  [0,0,0,0,0,0,0,0,0,0],
+]
 
 def to_str(mat):
-  return '/'.join(''.join(str(_) for _ in row) for row in mat)
+  return '\n'.join(
+    ''.join(str(c) if c else '.' for c in row)
+    for row in mat
+  )
 
-def test_flood_fill4(func):
-  mat = [
-    [0, 1, 0],
-    [1, 1, 1],
-    [0, 1, 0],
-  ]
-
-  assert to_str(mat) == '010/111/010'
-  func(mat, 0, 0, 1)
-  assert to_str(mat) == '110/111/010'
-  func(mat, 1, 1, 2)
-  assert to_str(mat) == '220/222/020'
-  print('PASSED!')
-
-
-def test_flood_fill8(func):
-  mat = [
-    [0, 1, 0],
-    [1, 0, 0],
-    [0, 0, 1],
-  ]
-
-  assert to_str(mat) == '010/100/001'
-  func(mat, 0, 1, 2)
-  assert to_str(mat) == '020/200/001'
-  func(mat, 1, 1, 2)
-  assert to_str(mat) == '222/222/221'
-  print('PASSED!')
+print('# Paint bucket')
+print('With matrix:')
+print(to_str(matrix))
+# ..........
+# ........1.
+# ..11......
+# ..1.1.....
+# .111.11...
+# .1.1.111..
+# ......11..
+# ..........
 
 
-### Flood fill with check-then-recurse
-
-def flood_fill(matrix, r, c, color):
+def flood_fill_4neighborhood(matrix, r, c, color):
   old_color = matrix[r][c]
   m = len(matrix)
   n = len(matrix[0])
@@ -55,48 +54,25 @@ def flood_fill(matrix, r, c, color):
 
   inner(r, c)
 
-matrix = [
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 1, 0, 0, 0, 0, 0, 0],
-  [0, 0, 1, 1, 0, 0, 0, 0, 0],
-  [0, 0, 1, 1, 2, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-]
-
-flood_fill(matrix, 0, 2, 3)
-print('Basic flood fill:')
-print('\n'.join(str(_) for _ in matrix))
-test_flood_fill4(flood_fill)
+flood_fill = flood_fill_4neighborhood
 
 
-### Flood fill with recurse-then-check
+import copy
 
-def flood_fill_rtc(matrix, r, c, color):
-  old_color = matrix[r][c]
-  m = len(matrix)
-  n = len(matrix[0])
+mat1 = copy.deepcopy(matrix)
+flood_fill_4neighborhood(mat1, 2, 2, 2)
+print('Flood fill 4-connected at (2,2):')
+print(to_str(mat1))
+# Flood fill 4-connected at (2,2):
+# ..........
+# ........1.
+# ..22......
+# ..2.1.....
+# .222.11...
+# .2.2.111..
+# ......11..
+# ..........
 
-  def inner(rr, cc):
-    if not (0 <= rr < m and 0 <= cc < n):
-      return
-    if matrix[rr][cc] != old_color:
-      return
-
-    matrix[rr][cc] = color
-
-    inner(rr - 1, cc)
-    inner(rr + 1, cc)
-    inner(rr, cc - 1)
-    inner(rr, cc + 1)
-
-  inner(r, c)
-
-print('\nflood_fill_rtc:')
-test_flood_fill4(flood_fill_rtc)
-
-
-### Flood fill with 8-neighborhood
 
 def flood_fill_8neighborhood(matrix, r, c, color):
   old_color = matrix[r][c]
@@ -118,11 +94,20 @@ def flood_fill_8neighborhood(matrix, r, c, color):
 
   inner(r, c)
 
-print('\nflood_fill_8neighborhood:')
-test_flood_fill8(flood_fill_8neighborhood)
+mat2 = copy.deepcopy(matrix)
+flood_fill_8neighborhood(mat2, 2, 2, 2)
+print('Flood fill 8-connected at (2,2):')
+print(to_str(mat2))
+# Flood fill 8-connected at (2,2):
+# ..........
+# ........1.
+# ..22......
+# ..2.2.....
+# .222.22...
+# .2.2.222..
+# ......22..
+# ..........
 
-
-### Count islands
 
 def count_islands(matrix):
   m = len(matrix)
@@ -136,20 +121,11 @@ def count_islands(matrix):
 
   return num_islands
 
-def test_count_islands(func):
-  mat = [
-    [0, 1, 0],
-    [1, 1, 0],
-    [0, 0, 1],
-  ]
-  assert func(mat) == 2
-  print('PASSED!')
+print('\n# Count islands')
+mat3 = copy.deepcopy(matrix)
+print('Num islands:', count_islands(mat3))
+# Num islands: 4
 
-print('\ncount islands:')
-test_count_islands(count_islands)
-
-
-### Flood fill with count
 
 def flood_fill_count(matrix, r, c, color):
   old_color = matrix[r][c]
@@ -173,26 +149,6 @@ def flood_fill_count(matrix, r, c, color):
 
   return inner(r, c)
 
-def test_flood_fill4_count(func):
-  mat = [
-    [0, 1, 0],
-    [1, 1, 1],
-    [0, 1, 0],
-  ]
-
-  assert to_str(mat) == '010/111/010'
-  assert func(mat, 0, 0, 1) == 1
-  assert to_str(mat) == '110/111/010'
-  assert func(mat, 1, 1, 2) == 6
-  assert to_str(mat) == '220/222/020'
-  print('PASSED!')
-
-
-print('\nflood_fill_count:')
-test_flood_fill4_count(flood_fill_count)
-
-
-### Find largest island
 
 def find_largest_island(matrix):
   m = len(matrix)
@@ -208,20 +164,10 @@ def find_largest_island(matrix):
 
   return largest_island
 
-def test_find_largest_island(func):
-  mat = [
-    [0, 1, 0],
-    [1, 1, 0],
-    [0, 0, 1],
-  ]
-  assert func(mat) == 3
-  print('PASSED!')
+mat4 = copy.deepcopy(matrix)
+print('Largest area:', find_largest_island(mat4))
+# Largest area: 8
 
-print('\nfind_largest_island:')
-test_find_largest_island(find_largest_island)
-
-
-### Flood fill and count perimeter
 
 def flood_fill_perimeter(matrix, r, c, color):
   old_color = matrix[r][c]
@@ -251,58 +197,24 @@ def flood_fill_perimeter(matrix, r, c, color):
 
   return inner(r, c)
 
-def count_perimter(matrix):
+
+def count_perimeter(matrix):
   m = len(matrix)
   n = len(matrix[0])
   total_perimeter = 0
   for r in range(m):
     for c in range(n):
       if matrix[r][c] == 1:
-        total_perimeter += flood_fill_perimeter(matrix, r, c, 2)
+        total_perimeter += (
+          flood_fill_perimeter(matrix, r, c, 2)
+        )
 
   return total_perimeter
 
-def test_count_perimter(func):
-  mat = [
-    [0, 0, 0, 0],
-    [0, 1, 1, 0],
-    [0, 1, 1, 0],
-    [0, 0, 0, 0],
-  ]
-  assert func(mat) == 4
+mat5 = copy.deepcopy(matrix)
+print('Perimeter length:', count_perimeter(mat5))
+# Perimeter length: 16
 
-  mat = [
-    [0, 0, 0, 0, 0],
-    [0, 1, 1, 1, 0],
-    [0, 1, 1, 1, 0],
-    [0, 1, 1, 1, 0],
-    [0, 0, 0, 0, 0],
-  ]
-  assert func(mat) == 8
-
-  mat = [
-    [0, 0, 0, 0, 0],
-    [0, 1, 1, 1, 0],
-    [0, 1, 0, 1, 0],
-    [0, 1, 0, 1, 0],
-    [0, 0, 0, 0, 0],
-  ]
-  assert func(mat) == 7
-
-  mat = [
-    [0, 1, 1, 0],
-    [1, 1, 1, 0],
-    [1, 1, 1, 1],
-    [0, 0, 0, 0],
-  ]
-  assert func(mat) == 8
-  print('PASSED!')
-
-print('\ncount_perimter:')
-test_count_perimter(count_perimter)
-
-
-### Count true islands (non-continents)
 
 def count_true_islands(matrix):
   m = len(matrix)
@@ -329,33 +241,55 @@ def count_true_islands(matrix):
 
   return num_islands
 
-def test_count_true_islands(func):
-  mat = [
-    [0, 0, 0, 0],
-    [0, 1, 1, 0],
-    [0, 1, 1, 0],
-    [0, 0, 0, 0],
-  ]
-  assert func(mat) == 1
+print('\n# Excluding continents')
+mat6 = [
+  [0, 0, 0, 0],
+  [0, 1, 1, 0],
+  [0, 1, 1, 0],
+  [0, 0, 0, 0],
+]
+print('With map:')
+# With map:
+# ....
+# .11.
+# .11.
+# ....
+print(to_str(mat6))
+print('Num true islands:', count_true_islands(mat6))
+# Num true islands: 1
 
-  mat = [
-    [0, 0, 0, 0, 0],
-    [0, 1, 1, 1, 0],
-    [0, 1, 1, 1, 0],
-    [0, 1, 1, 1, 0],
-    [0, 0, 0, 0, 1],
-  ]
-  assert func(mat) == 1
+mat7 = [
+  [0, 0, 0, 0, 0],
+  [0, 1, 1, 1, 0],
+  [0, 1, 1, 1, 0],
+  [0, 1, 1, 1, 0],
+  [0, 0, 0, 0, 1],
+]
+print('With map:')
+# With map:
+# .....
+# .111.
+# .111.
+# .111.
+# ....1
+print(to_str(mat7))
+print('Num true islands:', count_true_islands(mat7))
+# Num true islands: 1
 
-  mat = [
-    [0, 0, 0, 0, 0],
-    [0, 1, 1, 1, 0],
-    [0, 1, 0, 1, 0],
-    [1, 1, 0, 0, 0],
-    [0, 0, 0, 0, 0],
-  ]
-  assert func(mat) == 0
-  print('PASSED!')
-
-print('\ncount_true_islands:')
-test_count_true_islands(count_true_islands)
+mat8 = [
+  [0, 0, 0, 0, 0],
+  [0, 1, 1, 1, 0],
+  [0, 1, 0, 1, 0],
+  [1, 1, 0, 0, 0],
+  [0, 0, 0, 0, 0],
+]
+print('With map:')
+# With map:
+# .....
+# .111.
+# .1.1.
+# 11...
+# .....
+print(to_str(mat8))
+print('Num true islands:', count_true_islands(mat8))
+# Num true islands: 0
