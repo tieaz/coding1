@@ -83,9 +83,46 @@ print('phoneword_solutions(283):', phoneword_solutions(283, words))
 # phoneword_solutions(283): ['ate', 'ave', 'bud', 'cud', 'cue']
 
 
+import functools
+import sys
+import threading
+
+def spinner(message='Loading...'):
+  def decorator(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+      stop_event = threading.Event()
+
+      def animate():
+        chars = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']
+        for ch in iter(lambda: chars, None):
+          for c in ch:
+            if stop_event.is_set():
+              return
+            sys.stdout.write(f'\r{c} {message}')
+            sys.stdout.flush()
+            time.sleep(0.1)
+
+      spinner_thread = threading.Thread(target=animate)
+      spinner_thread.start()
+
+      try:
+        result = func(*args, **kwargs)
+        return result
+      finally:
+        stop_event.set()
+        spinner_thread.join()
+        sys.stdout.write('\r' + ' ' * (len(message) + 2) + '\r')
+        sys.stdout.flush()
+
+    return wrapper
+  return decorator
+
+
 import time
 import string
 
+@spinner('Running slow word ladder ...')
 def word_ladder(a: str, b: str, words: List[str]) -> bool:
   if len(a) != len(b):
     return False
@@ -127,6 +164,7 @@ def bfs_path(
   return None
 
 
+@spinner('Running slow word ladder path ...')
 def word_ladder_path(a: str, b: str, words: List[str]) -> List[str]:
   if len(a) != len(b):
     return None
