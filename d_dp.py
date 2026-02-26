@@ -1,19 +1,22 @@
 # Chapter D ⇒ DP
 
 from typing import *
+
 import time
 
-FIB_N = 10
+FIB_N = 30
 
 def fib(n: int) -> int:
   if n <= 1: return n
   return fib(n - 1) + fib(n - 2)
 
+print('# Fibonacci sequence')
 start = time.perf_counter()
 for i in range(FIB_N):
   print('fib', i, ':', fib(i))
 
-print('Recursive fib:', time.perf_counter() - start)
+print('Recursive fib time:', time.perf_counter() - start)
+# Recursive fib time: 0.35605391
 
 
 def fib_dp(n: int) -> int:
@@ -27,7 +30,8 @@ start = time.perf_counter()
 for i in range(FIB_N):
   print('fib_dp', i, ':', fib_dp(i))
 
-print('DP fib:', time.perf_counter() - start)
+print('DP fib time:', time.perf_counter() - start)
+# DP fib time: 0.00014716600000003188
 
 
 _CACHE: dict[int, int] = {}
@@ -43,9 +47,10 @@ def fib_cache(n: int) -> int:
 
 start = time.perf_counter()
 for i in range(FIB_N):
-  print('fib', i, ':', fib_cache(i))
+  print('fib with cache', i, ':', fib_cache(i))
 
-print('Memoized fib:', time.perf_counter() - start)
+print('Memoized fib time:', time.perf_counter() - start)
+# Memoized fib time: 0.0001042829999999828
 
 
 import functools
@@ -55,7 +60,8 @@ def fib_cache(n: int) -> int:
   if n <= 1: return n
   return fib_cache(n - 1) + fib_cache(n - 2)
 
-print(fib_cache(100))
+print('functool.cache fib of 100:', fib_cache(100))
+# functool.cache fib of 100: 354224848179261915075
 
 
 def palindromic_quadratic(s: str) -> str:
@@ -75,13 +81,13 @@ def palindromic_rec(s: str) -> str:
   if len(s) <= 1: return s
 
   if s[0] == s[-1]:
-    inner_pal = palindromic_rec2(s[1:-1])
+    inner_pal = palindromic_rec(s[1:-1])
     if len(inner_pal) == len(s) - 2:
       return s
 
   return max([
-    palindromic_rec2(s[1:]),
-    palindromic_rec2(s[:-1]),
+    palindromic_rec(s[1:]),
+    palindromic_rec(s[:-1]),
   ], key=len)
 
 
@@ -106,6 +112,15 @@ def palindromic_dp(s: str) -> str:
     key=len,
   )
 
+print('\n# Longest palindromic substring')
+s = 'bopupopuu'
+print('Quadratic solution:', palindromic_quadratic(s))
+# Quadratic solution: opupo
+print('Recursive solution:', palindromic_rec(s))
+# Recursive solution: upopu
+print('DP solution:', palindromic_dp(s))
+# DP solution: opupo
+
 
 def house_robber_arr(houses: List[int]) -> int:
   n = len(houses)
@@ -117,22 +132,25 @@ def house_robber_arr(houses: List[int]) -> int:
 
   return max(do_rob[-1], dont_rob[-1])
 
-print(house_robber_arr(houses))  # ==>
-16
+print('\n# House robber')
+houses = [3, 4, 5, 3, 7, 8]
+print('For array:', houses)
+print('DP with arrays:', house_robber_arr(houses))  # ==>
+# DP with arrays: 16
 
 
 from collections import namedtuple
 
 VI = namedtuple('VI', ['val', 'ixes'])
 print(VI(val=3, ixes=[1]))  # ==>
-VI(val=3, ixes=[1])
+# VI(val=3, ixes=[1])
 print(
   max(
     VI(val=1, ixes=[1]),
     VI(val=2, ixes=[]),
   ),
 )  # ==>
-VI(val=2, ixes=[])
+# VI(val=2, ixes=[])
 
 
 def house_robber_which(houses: List[int]) -> int:
@@ -149,25 +167,29 @@ def house_robber_which(houses: List[int]) -> int:
 
   return max(do_rob, dont_rob).ixes
 
-print(house_robber_which(houses))  # ==>
-[0, 2, 5]
+print('Which houses to rob:', house_robber_which(houses))  # ==>
+# Which houses to rob: [0, 2, 5]
 
 
 def house_robber_circle(houses: List[int]) -> int:
-  dont_rob0 = house_robber(houses[1:])
+  dont_rob0 = house_robber_arr(houses[1:])
   do_rob0 = houses[0] + (
-    house_robber(houses[2:-1]) if houses[2:-1] else 0
+    house_robber_arr(houses[2:-1]) if houses[2:-1] else 0
   )
   return max(dont_rob0, do_rob0)
 
-print(house_robber([1,2,3]))
-4
-print(house_robber([1,2,3,4,5]))
-9
-print(house_robber_circle([1,2,3]))
-3
-print(house_robber_circle([1,2,3,4,5]))
-8
+print('# House robber II')
+arr = [1,2,3]
+print(f'Standard solution for {arr}: {house_robber_arr(arr)}')
+# Standard solution for [1, 2, 3]: 4
+print(f'Circular solution for {arr}: {house_robber_circle(arr)}')
+# Circular solution for [1, 2, 3]: 3
+
+arr = [1,2,3,4,5]
+print(f'Standard solution for {arr}: {house_robber_arr(arr)}')
+# Standard solution for [1, 2, 3, 4, 5]: 9
+print(f'Circular solution for {arr}: {house_robber_circle(arr)}')
+# Circular solution for [1, 2, 3, 4, 5]: 8
 
 
 class TreeNode:
@@ -181,16 +203,22 @@ class TreeNode:
     self.left = left
     self.right = right
 
-rll = TreeNode(val=3)
-rlr = TreeNode(val=7)
-rl = TreeNode(val=4, left=rll, right=rlr)
-
-rrr = TreeNode(val=8)
-rr = TreeNode(val=5, right=rrr)
-
-root = TreeNode(val=3, left=rl, right=rr)
 
 DoDont = namedtuple('DoDont', ['do', 'dont'])
+
+
+def print_tree(node: TreeNode):
+  queue = [node]
+  while queue:
+    node = queue.pop(0)
+    if not node.left and not node.right:
+      continue
+    print(node.val, '-> left:', node.left and node.left.val, ', right:', node.right and node.right.val)
+    if node.left:
+      queue.append(node.left)
+    if node.right:
+      queue.append(node.right)
+
 
 def house_robber_tree(root: TreeNode) -> int:
   def max_rob(node: TreeNode) -> DoDont:
@@ -206,5 +234,17 @@ def house_robber_tree(root: TreeNode) -> int:
 
   return max(max_rob(root))
 
-print(house_robber_tree(root))
-21
+print('\n# House robber on tree')
+rll = TreeNode(val=3)
+rlr = TreeNode(val=7)
+rl = TreeNode(val=4, left=rll, right=rlr)
+rrr = TreeNode(val=8)
+rr = TreeNode(val=5, right=rrr)
+root = TreeNode(val=3, left=rl, right=rr)
+print('Tree:')
+print_tree(root)
+# 3 -> left: 4 , right: 5
+# 4 -> left: 3 , right: 7
+# 5 -> left: None , right: 8
+print('House robber on tree:', house_robber_tree(root))
+# House robber on tree: 21
