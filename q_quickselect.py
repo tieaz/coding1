@@ -20,7 +20,7 @@ def mergesort(arr: List[int]) -> List[int]:
   sorted_arr.extend(left[l:] + right[r:])
   return sorted_arr
 
-
+print('# Mergesort')
 names = ['Alice', 'Bob', ..., 'Zed']
 ages = [23, 27, ..., 56]
 heights = [167, 185, ..., 155]
@@ -30,6 +30,7 @@ print(arr)  # ==>
 # [('Alice', 23, 167), ('Bob', 27, 185), ..., ('Zed', 56, 155)]
 
 
+print('\n# Zip operations')
 names = ['Alice', 'Bob', ..., 'Zed']
 ages = [23, 27, ..., 56]
 heights = [167, 185, ..., 155]
@@ -43,6 +44,7 @@ print(n, a, h)  # ==>
 # ('Alice', 'Bob', ..., 'Zed') (23, 27, ..., 56) (167, 185, ..., 155)
 
 
+print('\n# Composite sorting')
 import random
 
 random.seed(20251205)
@@ -61,6 +63,7 @@ print(sorted_arr)  # ==>
 #  ('Z', 29, 108)]
 
 
+print('\n# Composite sorting with descending sort')
 random.seed(20251205)
 
 names = [chr(ord('A') + i) for i in range(26)]
@@ -81,6 +84,7 @@ sorted_heights = [-x[1] for x in sorted_arr]
 sorted_names = [x[2] for x in sorted_arr]
 
 
+print('\n# Composite sorting with key function')
 arr = list(zip(names, ages, heights))
 arr.sort(key=lambda x: (x[1], -x[2]))
 names, ages, heights = zip(*arr)
@@ -110,9 +114,11 @@ def dutch_flag(arr):
     else:
       i += 1
 
+print('\n# Dutch national flag')
 arr = [2, 1, 0, 1, 1, 0, 2, 2, 0]
+print('Given array:', arr)
 dutch_flag(arr)
-print('\nDutch flag:', arr)
+print('Dutch flag sort:', arr)
 # [0, 0, 0, 1, 1, 1, 2, 2, 2]
 
 
@@ -131,10 +137,12 @@ def quicksort(arr: List, lo: int=0, hi: int=None):
   quicksort(arr, lo, i - 1)
   quicksort(arr, i + 1, hi)
 
+print('\n# Quicksort')
 nums = [10, 7, 2, 9, 1, 5]
+print('Given array:', nums)
 quicksort(nums)
-print(nums)  # ==>
-# [1, 2, 5, 7, 9, 10]
+print('Sorted:', nums)  # ==>
+# Sorted [1, 2, 5, 7, 9, 10]
 
 
 def quickselect(arr: List[int], k: int, lo: int = 0, hi: int = None):
@@ -156,8 +164,10 @@ def quickselect(arr: List[int], k: int, lo: int = 0, hi: int = None):
   else:
       return quickselect(arr, k, i + 1, hi)
 
+print('\n# Quickselect')
 arr = [10, 7, 2, 9, 1, 5]
+print('Given array:', arr)
 print('quickselect 1:', quickselect(arr, 1))  # ==>
-quickselect 1: 10
+# quickselect 1: 10
 print('quickselect 2:', quickselect(arr, 2))  # ==>
-quickselect 2: 9
+# quickselect 2: 9
