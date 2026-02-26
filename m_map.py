@@ -67,7 +67,8 @@ class Map(object):
     self.n = new_map.n
     self.table = new_map.table
 
-
+print('\n# Design map/hashmap')
+m = Map()
 print("m.put('13', 'foo'):", m.put('13', 'foo'))
 print("m.put('-3', 'zoo'):", m.put('-3', 'zoo'))
 print("m.get('13'):", m.get('13')  )
@@ -88,6 +89,65 @@ print("m.get('0'):", m.get('0'))
 
 
 VN = namedtuple('VN', ['val', 'node'])
+
+
+class DLLNode(object):
+  def __init__(self, val, next=None, prev=None):
+    self.val = val
+    self.next = next
+    self.prev = prev
+
+  def remove(self) -> object:
+    if self.prev:
+      self.prev.next = self.next
+    if self.next:
+      self.next.prev = self.prev
+    return self
+
+  def insert_before(self, node: object) -> object:
+    self.prev = node.prev
+    if self.prev:
+      self.prev.next = self
+
+    self.next = node
+    node.prev = self
+    return self
+
+  def insert_after(self, node: object) -> object:
+    self.next = node.next
+    if self.next:
+      self.next.prev = self
+
+    self.prev = node
+    node.next = self
+    return self
+
+
+class LinkedList(object):
+  def __init__(self):
+    self.head = DLLNode(None)
+    self.tail = DLLNode(None)
+    self.head.next = self.tail
+    self.tail.prev = self.head
+
+  def push_front(self, val) -> any:
+    return DLLNode(val).insert_after(self.head)
+
+  def push_back(self, val) -> any:
+    return DLLNode(val).insert_before(self.tail)
+
+  @property
+  def is_empty(self) -> bool:
+    return self.head.next is self.tail
+
+  def pop_front(self) -> any:
+    if self.is_empty: return None
+    return self.head.next.remove().val
+
+  def pop_back(self) -> any:
+    if self.is_empty: return None
+    return self.tail.prev.remove().val
+
 
 class LRUCache(object):
   def __init__(self, capacity):
@@ -122,27 +182,42 @@ class LRUCache(object):
       self._push_front(key, value)
 
 
+def print_ll(prefix, head):
+  if not head:
+    print(prefix + ' <None>')
+    return
+
+  ptr = head
+  vals = []
+  while ptr:
+    vals.append(str(ptr.val))
+    ptr = ptr.next
+
+  print(prefix + ' ' + '->'.join(vals))
+
+
+print('\n# LRU cache')
 cache = LRUCache(3)
-print('Cache keys and list:', cache.map.keys(), ';', list2str(cache.list.head))
-# Cache keys and list: dict_keys([]) ; None->None
+print_ll(f'Cache keys and list: {cache.map.keys()};', cache.list.head)
+# Cache keys and list: dict_keys([]); None->None
 cache.put('A', 'ablob')
-# > get A: ablob
 print('> get A:', cache.get('A'))
-# Cache keys and list: dict_keys(['A']) ; None->A->None
-print('Cache keys and list:', cache.map.keys(), ';', list2str(cache.list.head))
-# Cache keys and list: dict_keys(['A', 'B']) ; None->B->A->None
+# > get A: ablob
+print_ll(f'Cache keys and list: {cache.map.keys()};', cache.list.head)
+# Cache keys and list: dict_keys(['A']); None->A->None
 cache.put('B', 'bblob')
-# Cache keys and list: dict_keys(['A', 'B', 'C']) ; None->C->B->A->None
 print('> get B:', cache.get('B'))
 # > get B: bblob
+print_ll(f'Cache keys and list: {cache.map.keys()};', cache.list.head)
+# Cache keys and list: dict_keys(['A', 'B']); None->B->A->None
 cache.put('C', 'cblob')
 print('> get C:', cache.get('C'))
 # > get C: cblob
-print('Cache keys and list:', cache.map.keys(), ';', list2str(cache.list.head))
-print('Cache keys and list:', cache.map.keys(), ';', list2str(cache.list.head))
+print_ll(f'Cache keys and list: {cache.map.keys()};', cache.list.head)
+# Cache keys and list: dict_keys(['A', 'B', 'C']); None->C->B->A->None
 cache.put('A', 'ablobnew')
-print('Cache keys and list:', cache.map.keys(), ';', list2str(cache.list.head))
-# Cache keys and list: dict_keys(['A', 'B', 'C']) ; None->A->C->B->None
+print_ll(f'After A->ablobnew: {cache.map.keys()};', cache.list.head)
+# After A->ablobnew: dict_keys(['A', 'B', 'C']); None->A->C->B->None
 cache.put('D', 'dblob')
-print('Cache keys and list:', cache.map.keys(), ';', list2str(cache.list.head))
-# Cache keys and list: dict_keys(['A', 'C', 'D']) ; None->D->A->C->None
+print_ll(f'After D->dblob: {cache.map.keys()};', cache.list.head)
+# After D->dblob: dict_keys(['A', 'C', 'D']); None->D->A->C->None
