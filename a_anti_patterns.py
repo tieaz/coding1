@@ -136,6 +136,19 @@ def convert_roman(roman):
 
 for roman in ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XIV', 'XIX', 'XCVIII']:
   print('roman', roman, ':', convert_roman(roman))
+  # roman I : 1
+  # roman II : 2
+  # roman III : 3
+  # roman IV : 4
+  # roman V : 5
+  # roman VI : 6
+  # roman VII : 7
+  # roman VIII : 8
+  # roman IX : 9
+  # roman X : 10
+  # roman XIV : 14
+  # roman XIX : 19
+  # roman XCVIII : 98
 
 
 def mat2str(mat: List[List[int]]) -> str:
@@ -186,6 +199,7 @@ print(list(
   for z in range(3)
   if y != z
 ))
+# [(0, 0, 1), (0, 0, 2), (0, 1, 0), (0, 1, 2), (0, 2, 0), (0, 2, 1), (1, 1, 0), (1, 1, 2), (1, 2, 0), (1, 2, 1), (2, 2, 0), (2, 2, 1)]
 
 
 def twosum_sort(
@@ -215,3 +229,4 @@ def f(n,t):
 print('twosum_sort:', twosum_sort([7,4,8,2,1,9,3], 13))
 # twosum_brute: [4, 9]
 print('Code golf:', f([7,4,8,2,1,9,3], 13))
+# Code golf: (4, 9)
