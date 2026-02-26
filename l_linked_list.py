@@ -30,6 +30,14 @@ def print_ll(prefix, head):
 
 Node = SLLNode
 
+def create_singly_linked_list(vals) -> SLLNode:
+  if not vals: return None
+  return SLLNode(
+    vals[0],
+    next=create_singly_linked_list(vals[1:]),
+  )
+
+
 def reverse_linked_list(head: Node) -> Node:
   ptr = head
   back = None
@@ -41,10 +49,12 @@ def reverse_linked_list(head: Node) -> Node:
 
   return back
 
+print('# Reverse linked list')
+head = create_singly_linked_list([1, 2, 4, 8])
 print_ll('Forward: ', head)  # ==>
 # Forward: 1->2->4->8
-rev = reverse_linked_list(head)  # ==>
-print_ll('Reversed: ', rev)
+rev = reverse_linked_list(head)
+print_ll('Reversed: ', rev)  # ==>
 # Reversed: 8->4->2->1
 
 
@@ -55,8 +65,11 @@ def nth_node_from_end(head: Node, n: int) -> Node:
 
   return back
 
-print('Nth node from end:', nth_node_from_end(head, 2).val)  # ==>
-# Nth node from end: 4
+print('\n# Nth node from end')
+head = create_singly_linked_list([1, 2, 4, 8])
+print_ll('list:', head)
+print('2nd node from end via reversing:', nth_node_from_end(head, 2).val)  # ==>
+# 2nd node from end via reversing: 4
 
 
 def nth_node_from_end(
@@ -74,11 +87,12 @@ def nth_node_from_end(
 
   return ptr1
 
-print('Nth node from end:', nth_node_from_end(head, 2).val)  # ==>
-# Nth node from end: 4
+head = create_singly_linked_list([1, 2, 4, 8])
+print('Via two pointers:', nth_node_from_end(head, 2).val)  # ==>
+# Via two pointers: 4
 
 
-def detect_cycle(head: Node)-> bool:
+def detect_cycle(head: Node) -> bool:
   if not head: return False
   slow = head
   fast = head.next
@@ -92,6 +106,19 @@ def detect_cycle(head: Node)-> bool:
   return False
 
 
+print('\n# Detect cycle')
+head = create_singly_linked_list([1, 2, 4, 8])
+print_ll('list:', head)
+print('Has cycle:', detect_cycle(head))
+# Has cycle: False
+two = head.next
+eight = two.next.next
+eight.next = two
+print('Has cycle:', detect_cycle(head))
+# Has cycle: True
+
+
+
 def linked_list_cycle_start(head: Node) -> Node:
   if not head: return None
   slow = head
@@ -103,7 +130,7 @@ def linked_list_cycle_start(head: Node) -> Node:
     slow = slow.next
     fast = fast.next.next
 
-  if not fast: return None
+  if not fast or not fast.next: return None
 
   length = 1
   ptr = slow
@@ -123,11 +150,17 @@ def linked_list_cycle_start(head: Node) -> Node:
     ptr1 = ptr1.next
     ptr2 = ptr2.next
 
-
+print('\n# Linked list cycle start')
+head = create_singly_linked_list([1, 2, 4, 8])
+start = linked_list_cycle_start(head)
+print('Cycle start:', start)  # ==>
+# Cycle start: None
+two = head.next
+eight = two.next.next
+eight.next = two
 start = linked_list_cycle_start(head)
 print('Cycle start:', start.val)  # ==>
-# Cycle start: 3
-
+# Cycle start: 2
 
 
 def find_length(head: None) -> int:
@@ -158,7 +191,7 @@ def is_palindrome(head: Node) -> bool:
   return True
 
 
-print('\nis_palindrome:')
+print('\n# Is palindrome')
 print('1,2,1:', is_palindrome(create_singly_linked_list([1, 2, 1])))
 # 1,2,1: True
 print('1,2,2,1:', is_palindrome(create_singly_linked_list([1, 2, 2, 1])))
@@ -245,23 +278,32 @@ class LinkedList(object):
     return self.tail.prev.remove().val
 
 
+print('\n# Doubly linked list')
 ll = LinkedList()
+print_ll('List:', ll.head)
+# List: None->None
 ll.push_back(1)
+print_ll('push_back(1):', ll.head)
+# push_back(1): None->1->None
 ll.push_back(2)
+print_ll('push_back(2):', ll.head)
+# push_back(2): None->1->2->None
 ll.push_back(3)
-print('List:', list2str(ll.head))
+print_ll('push_back(3):', ll.head)
+# push_back(3): None->1->2->3->None
+print_ll('List:', ll.head)
 # List: None->1->2->3->None
 print('Pop front:', ll.pop_front())
 # Pop front: 1
-print('List:', list2str(ll.head))
+print_ll('List:', ll.head)
 # List: None->2->3->None
 print('Pop back:', ll.pop_back())
 # Pop back: 3
-print('List:', list2str(ll.head))
+print_ll('List:', ll.head)
 # List: None->2->None
 print('Pop back:', ll.pop_back())
 # Pop back: 2
-print('List:', list2str(ll.head))
+print_ll('List:', ll.head)
 # List: None->None
 print('Pop front:', ll.pop_front())
 # Pop front: None
