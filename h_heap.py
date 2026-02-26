@@ -9,32 +9,31 @@ arr =        [9, 7, 15, 12, 16, 2, 14, 8, 15, 16, 18, 6]
 sorted_arr = [2, 6, 7, 8, 9, 12, 14, 15, 15, 16, 16, 18]
 heap_arr =   [2, 7, 6, 8, 16, 9, 14, 12, 15, 16, 18, 15]
 
-
+print('# Heap primer')
 arr = [7, 9, 2, 3, 8, 5]
+print('Given array:', arr)
 heapify(arr)
-print(arr)
-[2, 3, 5, 9, 8, 7]
+print('Heapify:', arr)
+# Heapify: [2, 3, 5, 9, 8, 7]
 
-print(heappop(arr))  # ==>
-2
-print(arr)  # ==>
-[3, 7, 5, 9, 8]
+print('heappop:', heappop(arr))  # ==>
+# heappop: 2
+print('array:', arr)  # ==>
+# array: [3, 7, 5, 9, 8]
 
 heappush(arr, 2)
-print(arr)  # ==>
-[2, 7, 3, 9, 8, 5]
+print('after heappush(2):', arr)  # ==>
+# after heappush(2): [2, 7, 3, 9, 8, 5]
 
 heappushpop(arr, 4)
-print(arr)  # ==>
-[3, 7, 4, 9, 8, 5]
+print('after heappushpop(4):', arr)  # ==>
+# after heappushpop(4): [3, 7, 4, 9, 8, 5]
 
-print(heappop(arr))  # ==>
-3
-print(arr)
+print('heappop:', heappop(arr))  # ==>
+# heappop: 3
+print('array:', arr)
+# array: [4, 7, 5, 9, 8]
 
-
-arr = [random.random() for _ in range(1000)]
-k = 17
 
 def kth_largest_element(arr: List[int], k: int) -> int:
   heap = arr[:k]
@@ -45,7 +44,11 @@ def kth_largest_element(arr: List[int], k: int) -> int:
 
   return heap[0]
 
-print('k\'th largest:', kth_largest_element(arr, k))
+print("\n# K'th largest element")
+arr = [random.random() for _ in range(1000)]
+k = 17
+print(f'Given array: {arr[:7]} ... {arr[-3:]} and k {k}: {kth_largest_element(arr, k)}')
+# Given array: [0.7259553430470489, 0.28417136640520335, 0.8930905320941043, 0.6897250836549171, 0.5633781496662914, 0.12015601677164445, 0.6812677896474283] ... [0.1920469605575783, 0.6125241847755188, 0.2624224787141901] and k 17: 0.9848876452768414
 
 
 def kth_smallest_element(arr: List[int], k: int) -> int:
@@ -76,6 +79,7 @@ def mergesort(arr: List[int]) -> List[int]:
   sorted_arr.extend(left[l:] + right[r:])
   return sorted_arr
 
+print('\n# Mergesort')
 arr = [random.randint(1, 100) for _ in range(100)]
 sorted_arr = mergesort(arr)
 print('arr:', arr)
@@ -104,8 +108,12 @@ def mergesort_kway(arrs: List[List[int]]) -> List[int]:
 
   return sorted_arr
 
-print(mergesort_kway([[1,2,3], [0,4,6,8], [], [5,7,9]]))  # ==>
-[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+print('\n# K-way mergesort')
+arrs = [[1,2,3], [0,4,6,8], [], [5,7,9]]
+print('From arrays:', arrs)
+# From arrays: [[1, 2, 3], [0, 4, 6, 8], [], [5, 7, 9]]
+print('Sorted:', mergesort_kway(arrs))  # ==>
+# Sorted: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 
 VAI = namedtuple('VAI', ['val', 'arrs_ix', 'ix'])
@@ -128,9 +136,8 @@ def mergesort_kway_heap(arrs: List[List[int]]) -> List[int]:
 
   return sorted_arr
 
-print(mergesort_kway_heap([[1,2,3], [0,4,6,8], [], [5,7,9]]))  # ==>
-[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-
+print('Heap method:', mergesort_kway_heap([[1,2,3], [0,4,6,8], [], [5,7,9]]))  # ==>
+# Heap method: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 
 import bisect
@@ -174,8 +181,9 @@ class StreamingMedianMMM(object):
       return -self.lo[0]
     return 0.5 * (self.hi[0] - self.lo[0])
 
+print('\n# Min-max-median heap')
 srt = StreamingMedianSorted()
 mmm = StreamingMedianMMM()
 for i in range(1, 20):
-  print('\nSorted i:', i, '>', srt.push(i))
-  print('MMM    i:', i, '>', mmm.push(i))
+  print('\nSorted i:', i, '->', srt.push(i))
+  print('MMM    i:', i, '->', mmm.push(i))
