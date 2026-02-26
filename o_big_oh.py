@@ -2,6 +2,7 @@
 
 from typing import *
 
+x = [1,2,3,4,5,6]
 
 # Accessing fixed elements.
 front = x[0]
@@ -43,6 +44,21 @@ def fib(n: int) -> int:
   if n <= 1: return n
   return fib(n - 1) + fib(n - 2)
 
+print('# Fibonacci sequence')
+for i in range(10):
+  print(f'{i}: {fib(i)}')
+  # 0: 0
+  # 1: 1
+  # 2: 1
+  # 3: 2
+  # 4: 3
+  # 5: 5
+  # 6: 8
+  # 7: 13
+  # 8: 21
+  # 9: 34
+
+
 
 def permutations(arr):
   perms = []
@@ -61,5 +77,6 @@ def permutations(arr):
   inner(arr, [])
   return perms
 
+print('\n# Permutations')
 print(permutations([1,2,3]))  # ==>
 [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]
