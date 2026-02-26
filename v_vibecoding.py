@@ -3,6 +3,12 @@
 from typing import *
 
 
+class Node(object):
+  def __init__(self, val, next=None):
+    self.val = val
+    self.next = next
+
+
 def has_cycle(head: Node) -> bool:
   visited = set()
   current = head
@@ -14,12 +20,15 @@ def has_cycle(head: Node) -> bool:
 
   return False
   
+print('# Cycle detection')
 head = Node(1)
 head.next = Node(2)
 head.next.next = Node(3)
-print(has_cycle(head))
+print('Without cycle:', has_cycle(head))
+# Without cycle: False
 head.next.next.next = head
-print(has_cycle(head))
+print('With cycle:', has_cycle(head))
+# With cycle: True
 
 
 def has_cycle(head: Node) -> bool:
@@ -32,8 +41,6 @@ def has_cycle(head: Node) -> bool:
       return True
 
   return False
-
-
 
 
 # > Naive prompt: 'Find if a target exists in an array'
