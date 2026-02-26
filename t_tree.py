@@ -32,20 +32,25 @@ def print_tree(node: TreeNode):
   queue = [node]
   while queue:
     node = queue.pop(0)
+    if not node.left and not node.right:
+      continue
     print(node.val, '-> left:', node.left and node.left.val, ', right:', node.right and node.right.val)
     if node.left:
       queue.append(node.left)
     if node.right:
       queue.append(node.right)
 
+print('# Traversals')
 arr = [1, 2, 3, 4, 5, 6, 7]
-print('Preorder:')
+print('Given array:', arr)
 preorder_root = build_preorder(arr[:])
+print('Build as pre-order traversal:')
 print_tree(preorder_root)
+# 1 -> left: 2 , right: 3
+# 2 -> left: 4 , right: 5
+# 3 -> left: 6 , right: 7
 
-print('Postorder:')
-postorder_root = build_postorder(arr[:])
-print_tree(postorder_root)
+root = preorder_root
 
 
 def preorder_rec(node: TreeNode):
@@ -86,8 +91,14 @@ def level_order(root: TreeNode) -> List[int]:
 
   return traversal
 
-level = level_order(preorder_root)
-print('Level order:', level)
+print('\n# Recursive traversals')
+print('Pre-order:', preorder_rec(root))
+# Pre-order: [1, 2, 4, 5, 3, 6, 7]
+print('Post-order:', postorder_rec(root))
+# Post-order: [4, 5, 2, 6, 7, 3, 1]
+print('In-order:', inorder_rec(root))
+# In-order: [4, 2, 5, 1, 6, 3, 7]
+print('Level order:', level_order(root))
 # Level order: [1, 2, 3, 4, 5, 6, 7]
 
 
@@ -136,6 +147,14 @@ def postorder(root: TreeNode) -> List[int]:
 
   return list(reversed(traversal))
 
+print('\n# Iterative traversals')
+print('Pre-order:', preorder(root))
+# Pre-order: [1, 2, 4, 5, 3, 6, 7]
+print('Post-order:', postorder(root))
+# Post-order: [4, 5, 2, 6, 7, 3, 1]
+print('In-order:', inorder(root))
+# In-order: [4, 2, 5, 1, 6, 3, 7]
+
 
 def tree_depth(node: TreeNode, depth: int=0) -> int:
   if not node: return 0
@@ -146,7 +165,7 @@ def tree_depth(node: TreeNode, depth: int=0) -> int:
   )
 
 
-from collections import namedtuple
+from collections import defaultdict, namedtuple
 
 NV = namedtuple('NV', ['node', 'val'])
 def max_depth(root: TreeNode) -> List[int]:
@@ -162,9 +181,9 @@ def max_depth(root: TreeNode) -> List[int]:
 
   return max_depth
 
-
-print(max_depth(root))  # ==>
-2
+print('\n# Tree depth and structure')
+print('Max depth:', max_depth(root))  # ==>
+# Max depth: 2
 
 
 def is_full(node: TreeNode) -> bool:
@@ -212,7 +231,7 @@ def is_complete(root: TreeNode) -> bool:
 
   return True
 
-
+print('\n# Tree structure')
 for arr in [
   [],
   [1],
@@ -223,11 +242,12 @@ for arr in [
   [1,2,3,None,None,6,7,8,9,10,11],
 ]:
   node = build_preorder(arr[:])
-  print('\nTree:', arr)
+  print('Tree from:', arr)
   print('depth:', tree_depth(node))
   print('is_full:', is_full(node))
   print('is_balanced:', is_balanced(node))
   print('is_complete:', is_complete(node))
+  print('')
 
 
 def lowest_common_ancestor(node, p, q):
@@ -240,14 +260,19 @@ def lowest_common_ancestor(node, p, q):
     return node
   return left if left else right
 
+print('# Lowest common ancestor')
 ll = TreeNode(3)
 lr = TreeNode(4)
 l = TreeNode(1, left=ll, right=lr)
 r = TreeNode(2)
 root = TreeNode(0, left=l, right=r)
-
-print(lowest_common_ancestor(root, ll, lr).val)  # ==>
-1
+print('Tree:')
+print_tree(root)
+# Tree:
+# 0 -> left: 1 , right: 2
+# 1 -> left: 3 , right: 4
+print(f'LCA for {ll.val} and {lr.val}:', lowest_common_ancestor(root, ll, lr).val)  # ==>
+# LCA for 3 and 4: 1
 
 
 def is_valid_bst(root: TreeNode) -> bool:
@@ -269,10 +294,33 @@ def is_valid_bst(root: TreeNode) -> bool:
 
   return check_node(root, None, None)
 
+print('\n# Validate BST')
+bst_root = build_preorder([25, 20, 36, 10, 22, 30, 40])
+print('Tree:')
+print_tree(bst_root)
+# Tree:
+# 25 -> left: 20 , right: 36
+# 20 -> left: 10 , right: 22
+# 36 -> left: 30 , right: 40
+print('Is valid BST (balanced):', is_valid_bst(bst_root))
+# Is valid BST (balanced): True
 
-print('is_valid_bst:', is_valid_bst(bst_root))
-# is_valid_bst: True
-print('is_valid_bst (imbalanced):', is_valid_bst(build_preorder([25, 20, 36, 10, 22, 30, 20])))
-# is_valid_bst (imbalanced): False
-print('is_valid_bst (imbalanced):', is_valid_bst(build_preorder([25, 20, 36, 30, 22, 30, 40])))
-# is_valid_bst (imbalanced): False
+bst_root = build_preorder([25, 20, 36, 10, 22, 30, 20])
+print('\nTree:')
+print_tree(bst_root)
+# Tree:
+# 25 -> left: 20 , right: 36
+# 20 -> left: 10 , right: 22
+# 36 -> left: 30 , right: 20
+print('Is valid BST (imbalanced):', is_valid_bst(bst_root))
+# Is valid BST (imbalanced): False
+
+bst_root = build_preorder([25, 20, 36, 30, 22, 30, 40])
+print('\nTree:')
+print_tree(bst_root)
+# Tree:
+# 25 -> left: 20 , right: 36
+# 20 -> left: 30 , right: 22
+# 36 -> left: 30 , right: 40
+print('Is valid BST (imbalanced):', is_valid_bst(bst_root))
+# Is valid BST (imbalanced): False
