@@ -1,6 +1,8 @@
 #!/bin/bash
 
-find . -maxdepth 1 -name "*.py" | while read -r file; do
+shopt -s nullglob
+
+for file in *.py; do
     echo ""
     echo "------------------------------------------"
     echo "Running: $file"
