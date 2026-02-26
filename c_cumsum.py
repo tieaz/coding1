@@ -1,17 +1,15 @@
+# Chapter C ⇒ Cumsum
+
 from typing import *
 
-### Sample terrain
-
-terrain = [1, 3, 1, 1, 2, 0, 0, 1, 2, 2, 4, 1]
-
-
-### Prototype
 
 def reservoir_volume(terrain: List[int]) -> int:
   pass
 
 
-### Water height O(n^2) solution
+print('# Reservoir volume')
+terrain = [1, 3, 1, 1, 2, 0, 0, 1, 2, 2, 4, 1]
+print('Sample terrain:', terrain)
 
 def reservoir_volume_brute(terrain: List[int]) -> int:
   water_height = terrain[:]
@@ -21,11 +19,9 @@ def reservoir_volume_brute(terrain: List[int]) -> int:
 
   return sum(water_height)
 
-print('Brute force:', reservoir_volume_brute(terrain))
-# Brute force: 15
+print('Brute force solution:', reservoir_volume_brute(terrain))
+# Brute force solution: 15
 
-
-### Water height O(n) cumsum solution
 
 def reservoir_volume_cumsum(terrain: List[int]) -> int:
   cumleft = [terrain[0]]
@@ -47,33 +43,42 @@ print('Cumsum solution:', reservoir_volume_cumsum(terrain))
 # Cumsum solution: 15
 
 
-### Cumulative product
+class RangeSumQuery(object):
+  def __init__(self, arr: List[int]):
+    self.arr = arr
+    self.cumsum = [arr[0]] * len(arr)
+    for i in range(1, len(arr)):
+      self.cumsum[i] = self.cumsum[i - 1] + arr[i]
 
-values = [1, 2, 3, 4]
-values = [-1, 1, 0, -3, 3]
+  def query(self, left: int, right: int) -> int:
+    return self.cumsum[right] - (self.cumsum[left - 1] if left else 0)
 
-cumleft = [1]
-for i in range(0, len(values) - 1):
-  cumleft.append(cumleft[-1] * values[i])
+print('\n# Range sum query')
+arr = [1, -2, 0, 3, 5, 2, -1]
+print('Given array:', arr)
+range_sum = RangeSumQuery(arr)
+print('Range [0,5]:', range_sum.query(0, 5))
+# Range [0,5]: 9
+print('Range [1,5]:', range_sum.query(1, 5))
+# Range [1,5]: 8
+print('Range [2,5]:', range_sum.query(2, 5))
+# Range [2,5]: 10
+print('Range [3,5]:', range_sum.query(3, 5))
+# Range [3,5]: 10
+print('Range [4,5]:', range_sum.query(4, 5))
+# Range [4,5]: 7
+print('Range [5,5]:', range_sum.query(5, 5))
+# Range [5,5]: 2
 
-cumright = [1]
-for i in range(len(values) - 1, 0, -1):
-  cumright.append(cumright[-1] * values[i])
 
-cumright = cumright[::-1]
-
-products = [cumleft[i] * cumright[i] for i in range(len(values))]
-print('\nCum products:', products)
-
-
-### Range Sum Query 2D
-
+print('\n# Range sum query 2D')
 matrix = [
   [1, 3, 2, 6, 2, 0],
   [5, 4, 2, 0, 1, 6],
   [1, 3, 2, 6, 2, 0],
   [5, 4, 2, 0, 1, 6],
 ]
+print('matrix:', matrix)
 
 m = len(matrix)
 n = len(matrix[0])
@@ -87,6 +92,14 @@ for r in range(1, m):
   for c in range(n):
     cummatrix[r][c] += cummatrix[r - 1][c]
 
+print('cummatrix:', cummatrix)
+# cummatrix: [
+#   [1, 4, 6, 12, 14, 14],
+#   [6, 13, 17, 23, 26, 32],
+#   [7, 17, 23, 35, 40, 46],
+#   [12, 26, 34, 46, 52, 64],
+# ]
+
 r1, c1 = 1, 1
 r2, c2 = 3, 3
 sum_range = (
@@ -95,4 +108,28 @@ sum_range = (
   (cummatrix[r1 - 1][c2] if r1 else 0) +
   (cummatrix[r1 - 1][c1 - 1] if r1 and c1 else 0)
 )
-print('\nRange sum query 2D', r1, c1, r2, c2, ':', sum_range)
+print('Range sum query 2D', r1, c1, r2, c2, ':', sum_range)
+# Range sum query 2D 1 1 3 3 : 23
+
+
+print('\n# Product of array except self')
+values = [1, 2, 3, 4]
+values = [-1, 1, 0, -3, 3]
+
+cumleft = [1]
+for i in range(0, len(values) - 1):
+  cumleft.append(cumleft[-1] * values[i])
+
+cumright = [1]
+for i in range(len(values) - 1, 0, -1):
+  cumright.append(cumright[-1] * values[i])
+
+cumright = cumright[::-1]
+print('cumleft:', cumleft)
+# cumleft: [1, -1, -1, 0, 0]
+print('cumright:', cumright)
+# cumright: [0, 0, -9, 3, 1]
+
+products = [cumleft[i] * cumright[i] for i in range(len(values))]
+print('Cum products:', products)
+# Cum products: [0, 0, 9, 0, 0]
