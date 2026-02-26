@@ -17,6 +17,7 @@ def graph_from_matrix(
 
   return graph
 
+print('# Building graphs')
 adj_matrix = [
   [0, 1, 0, 0],
   [1, 0, 1, 1],
@@ -24,13 +25,13 @@ adj_matrix = [
   [0, 1, 0, 0],
 ]
 graph = graph_from_matrix(adj_matrix)
-print(graph)  # ==>
-{
-  'A': {'B'},
-  'B': {'C', 'A', 'D'},
-  'C': {'B'},
-  'D': {'B'},
-}
+print('Graph from adjacency matrix:', graph)  # ==>
+# Graph from adjacency matrix: {
+#   'A': {'B'},
+#   'B': {'C', 'A', 'D'},
+#   'C': {'B'},
+#   'D': {'B'},
+# }
 
 
 def graph_from_list(
@@ -54,13 +55,13 @@ adj_list = [
   [1],
 ]
 graph = graph_from_list(adj_list)
-print(graph)  # ==>
-{
-  'A': {'B'},
-  'B': {'C', 'A', 'D'},
-  'C': {'B'},
-  'D': {'B'},
-}
+print('Graph from list:', graph)  # ==>
+# Graph from list: {
+#   'A': {'B'},
+#   'B': {'C', 'A', 'D'},
+#   'C': {'B'},
+#   'D': {'B'},
+# }
 
 
 import heapq
@@ -83,6 +84,22 @@ def dijkstra(
         heapq.heappush(queue, (new_dist, neighbor))
 
   return dist
+
+
+def graph_from_matrix_weighted(
+  adj_matrix: List[List[int]],
+) -> dict[str, set]:
+  n = len(adj_matrix)
+  node_id = lambda i: chr(ord('A') + i)
+  graph = {}
+  for i in range(n):
+    graph[node_id(i)] = {
+      node_id(j): adj_matrix[i][j]
+      for j in range(n)
+      if adj_matrix[i][j]
+    }
+
+  return graph
 
 
 from collections import namedtuple
@@ -110,28 +127,29 @@ def dijkstra_path(
 
   return dist
 
-flight_graph = graph_from_matrix([
+print("\n# Dijkstra's algorithm")
+flight_graph = graph_from_matrix_weighted([
   [  0, 100,   0,   0],
   [  0,   0, 100, 400],
   [ 50,   0,   0, 250],
   [  0,   0,   0,   0],
 ])
-print('\nFLIGHT GRAPH!')
-print(graph)
-print(dijkstra(flight_graph, 'A'))
-{
-  'A': 0,
-  'B': 100,
-  'C': 200,
-  'D': 450,
-}
-print(dijkstra_path(flight_graph, 'A'))
-{
-  'A': DP(dist=0, path=['A']),
-  'B': DP(dist=100, path=['A', 'B']),
-  'C': DP(dist=200, path=['A', 'B', 'C']),
-  'D': DP(dist=450, path=['A', 'B', 'C', 'D']),
-}
+print('Flights graph:', flight_graph)
+# Flights graph: {'A': {'B': 100}, 'B': {'C': 100, 'D': 400}, 'C': {'A': 50, 'D': 250}, 'D': {}}
+print('Dijkstra from A:', dijkstra(flight_graph, 'A'))
+# Dijkstra from A: {
+#   'A': 0,
+#   'B': 100,
+#   'C': 200,
+#   'D': 450,
+# }
+print('Dijkstra path from A:', dijkstra_path(flight_graph, 'A'))
+# Dijkstra path from A: {
+#   'A': DP(dist=0, path=['A']),
+#   'B': DP(dist=100, path=['A', 'B']),
+#   'C': DP(dist=200, path=['A', 'B', 'C']),
+#   'D': DP(dist=450, path=['A', 'B', 'C', 'D']),
+# }
 
 
 def course_schedule_dfs(
@@ -173,14 +191,21 @@ def course_schedule(
 
   return True
 
-print('Simple:', course_schedule_dfs(3, [[1,0]]))
-print('Simple:', course_schedule(3, [[1,0]]))
+print('\n# Course schedule')
+print('Simple DFS:', course_schedule_dfs(3, [[1,0]]))
+# Simple DFS: True
+print('Simple path:', course_schedule(3, [[1,0]]))
+# Simple path: True
 
-print('Bad:', course_schedule_dfs(3, [[1,0],[0,1],[2,1]]))
-print('Bad:', course_schedule(3, [[1,0],[0,1],[2,1]]))
+print('Bad DFS:', course_schedule_dfs(3, [[1,0],[0,1],[2,1]]))
+# Bad DFS: False
+print('Bad path:', course_schedule(3, [[1,0],[0,1],[2,1]]))
+# Bad path: False
 
-print('Diamond:', course_schedule_dfs(5, [[1,4],[2,4],[3,1],[3,2]]))
-print('Diamond:', course_schedule(5, [[1,4],[2,4],[3,1],[3,2]]))
+print('Diamond DFS:', course_schedule_dfs(5, [[1,4],[2,4],[3,1],[3,2]]))
+# Diamond DFS: False
+print('Diamond path:', course_schedule(5, [[1,4],[2,4],[3,1],[3,2]]))
+# Diamond path: True
 
 
 def bellman_ford(
@@ -201,3 +226,12 @@ def bellman_ford(
         raise ValueError('Negative cycle detected')
 
   return dist
+
+print('\n# Bellman-Ford')
+print('On flight graph:', bellman_ford(flight_graph, 'A'))
+# On flight graph: {
+#   'A': 0,
+#   'B': 100,
+#   'C': 200,
+#   'D': 450,
+# }
